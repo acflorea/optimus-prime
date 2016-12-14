@@ -9,7 +9,7 @@ def objectiveFunction(categoryScalingFactor, productScalingFactor):
     root = '/Users/acflorea/phd/columbugus_data/netbeans_final_test'
 
     sparkParams = '-Dconfig.file=/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/columbugus-conf/netbeans.conf ' \
-                  '-Dreccsys.phases.preprocess=false ' \
+                  '-Dreccsys.phases.preprocess=true ' \
                   '-Dreccsys.preprocess.includeCategory=true ' \
                   '-Dreccsys.preprocess.includeProduct=true ' \
                   '-Dreccsys.filesystem.resultsFileName=' + resultsFileName \
@@ -41,9 +41,9 @@ def objectiveFunction(categoryScalingFactor, productScalingFactor):
 # objectiveFunction(categoryScalingFactor=1, productScalingFactor=1)
 
 pars, details, _ = optunity.maximize(objectiveFunction,
-                                     num_evals=10,
-                                     categoryScalingFactor=[0, 10],
-                                     productScalingFactor=[0, 10],
+                                     num_evals=100,
+                                     categoryScalingFactor=[0, 100],
+                                     productScalingFactor=[0, 100],
                                      solver_name='grid search')
 
-print 'cool'
+print pars
