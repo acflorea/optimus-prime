@@ -1,6 +1,7 @@
 from subprocess import call
 import optunity
 
+from matplotlib import pylab as plt
 
 def objectiveFunction(categoryScalingFactor, productScalingFactor):
     print "We begin..."
@@ -40,10 +41,23 @@ def objectiveFunction(categoryScalingFactor, productScalingFactor):
 # Go!
 # objectiveFunction(categoryScalingFactor=1, productScalingFactor=1)
 
-pars, details, _ = optunity.maximize(objectiveFunction,
-                                     num_evals=100,
-                                     categoryScalingFactor=[0, 100],
-                                     productScalingFactor=[0, 100],
-                                     solver_name='grid search')
+optimap_params, info, _ = optunity.maximize(objectiveFunction,
+                                     num_evals=10,
+                                     categoryScalingFactor=[60, 120],
+                                     productScalingFactor=[60, 120],
+                                     solver_name='particle swarm')
 
-print pars
+print("Optimal parameters: " + str(optimap_params))
+print("AUROC of tuned SVM with RBF kernel: %1.3f" % info.optimum)
+
+df = optunity.call_log2dataframe(info.call_log)
+
+cutoff = 0.5
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(xs=df[df.value > cutoff]['categoryScalingFactor'],
+           ys=df[df.value > cutoff]['productScalingFactor'],
+           zs=df[df.value > cutoff]['value'])
+ax.set_xlabel('logC')
+ax.set_ylabel('logGamma')
+ax.set_zlabel('AUROC')
