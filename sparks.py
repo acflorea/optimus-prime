@@ -2,6 +2,7 @@ from subprocess import call
 import optunity
 
 from matplotlib import pylab as plt
+from mpl_toolkits.mplot3d import axes3d, Axes3D #<-- Note the capitalization!
 
 def objectiveFunction(categoryScalingFactor, productScalingFactor):
     print "We begin..."
@@ -42,22 +43,25 @@ def objectiveFunction(categoryScalingFactor, productScalingFactor):
 # objectiveFunction(categoryScalingFactor=1, productScalingFactor=1)
 
 optimap_params, info, _ = optunity.maximize(objectiveFunction,
-                                     num_evals=10,
+                                     num_evals=100,
                                      categoryScalingFactor=[60, 120],
                                      productScalingFactor=[60, 120],
                                      solver_name='particle swarm')
 
 print("Optimal parameters: " + str(optimap_params))
-print("AUROC of tuned SVM with RBF kernel: %1.3f" % info.optimum)
+print("F1 of tuned model : %1.3f" % info.optimum)
 
 df = optunity.call_log2dataframe(info.call_log)
 
 cutoff = 0.5
 fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+ax = Axes3D(fig)
+
 ax.scatter(xs=df[df.value > cutoff]['categoryScalingFactor'],
            ys=df[df.value > cutoff]['productScalingFactor'],
            zs=df[df.value > cutoff]['value'])
-ax.set_xlabel('logC')
-ax.set_ylabel('logGamma')
-ax.set_zlabel('AUROC')
+ax.set_xlabel('categoryScalingFactor')
+ax.set_ylabel('productScalingFactor')
+ax.set_zlabel('F1')
+
+plt.show()
