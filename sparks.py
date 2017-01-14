@@ -5,7 +5,7 @@ from matplotlib import pylab as plt
 from mpl_toolkits.mplot3d import axes3d, Axes3D  # <-- Note the capitalization!
 
 
-def objectiveFunction(categoryScalingFactor, productScalingFactor, tuningMode=True):
+def objectiveFunction(categoryScalingFactor, productScalingFactor, stepSize=1, regParam=0.01, tuningMode=True):
     print "We begin..."
 
     resultsFileName = 'results.out'
@@ -24,7 +24,9 @@ def objectiveFunction(categoryScalingFactor, productScalingFactor, tuningMode=Tr
                   + ' -Dreccsys.filesystem.resultsFileName=' + resultsFileName \
                   + ' -Dreccsys.filesystem.root=' + root \
                   + ' -Dreccsys.preprocess.categoryScalingFactor=' + str(categoryScalingFactor) \
-                  + ' -Dreccsys.preprocess.productScalingFactor=' + str(productScalingFactor)
+                  + ' -Dreccsys.preprocess.productScalingFactor=' + str(productScalingFactor) \
+                  + ' -Dreccsys.train.stepSize=' + str(stepSize) \
+                  + ' -Dreccsys.train.regParam=' + str(regParam)
 
     call(['/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/bin/spark-submit',
           '--class', 'dr.acf.recc.ReccomenderBackbone',
@@ -50,9 +52,11 @@ def objectiveFunction(categoryScalingFactor, productScalingFactor, tuningMode=Tr
 # objectiveFunction(categoryScalingFactor=1, productScalingFactor=1)
 
 optimap_params, info, _ = optunity.maximize(objectiveFunction,
-                                            num_evals=100,
+                                            num_evals=10,
                                             categoryScalingFactor=[60, 120],
                                             productScalingFactor=[60, 120],
+                                            # stepSize=[0.8, 1.2],
+                                            # regParam=[0.005, 0.015],
                                             solver_name='particle swarm')
 
 print("Optimal parameters: " + str(optimap_params))
