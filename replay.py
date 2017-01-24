@@ -6,8 +6,10 @@ import os
 folder = '/Users/acflorea/phd/mariana-triage/'
 pingInterval = 10
 
-# sparkLocation = '/root/ibm/spark-dk-1.6.3.0/spark/bin/spark-submit'
-sparkLocation = '/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/bin/spark-submit'
+maxEpochs = 50
+
+sparkLocation = '/root/ibm/spark-dk-1.6.3.0/spark/bin/spark-submit'
+# sparkLocation = '/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/bin/spark-submit'
 
 sparkParams = '-Dconfig.file=./application.conf ' \
               '-Dmariana.global.sourceModel={0} ' \
@@ -35,7 +37,8 @@ def findMostRecentModel(folder):
 
 
 while True:
-    pids = findProcess("IntelliJ")
+    print "Here we go, searching for ParagraphVector"
+    pids = findProcess("ParagraphVector")
     if (len(pids) > 1):
         print "Hurray ... still running"
     else:
@@ -44,6 +47,9 @@ while True:
         mostRecentModel = findMostRecentModel(folder)
         if (mostRecentModel):
             counter = mostRecentModel[mostRecentModel.rfind('_') + 1: -4]
+            if counter >= maxEpochs:
+                # Stop at maxEpochs
+                break
             print "Most recent model is " + mostRecentModel + " Counter is " + counter
             newModel = mostRecentModel[
                        mostRecentModel.rfind('/') + 1:mostRecentModel.rfind('_')] + "_" + counter + ".zip"
