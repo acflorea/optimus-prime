@@ -1,0 +1,156 @@
+\documentclass{article}
+
+\usepackage{amssymb}
+\setcounter{tocdepth}{3}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage[section]{placeins}
+
+\begin{document}
+
+\title{Optimizare parametri cu Optunity}
+\maketitle
+
+\section{Netbeans}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{netbeans/g_netbeans.pdf}
+% 52.575	22.875	0.876820894815
+% Weighted Precision = 0.8930643178096774
+% Weighted Recall = 0.8711111111111112
+% Weighted fMeasure = 0.8736014868056691
+\caption{Grid Search - CategoryScalingFactor: 52.575; ProductScalingFactor: 22.875; F1: 0.876820894815 }
+\label{fig:NGrid-Search}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{netbeans/rnd_netbeans.pdf}
+% 21.6943001429	38.0103488211	0.87722722106
+% Weighted Precision = 0.8841059493844838
+% Weighted Recall = 0.8622222222222222
+% Weighted fMeasure = 0.86491167051164
+\caption{Random Search - CategoryScalingFactor: 21.6943001429; ProductScalingFactor: 38.0103488211; F1: 0.87722722106 }
+\label{fig:NRandom-Search}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{netbeans/ps_netbeans.pdf}
+% 26.16484375	35.2538664392	0.883120876133
+% Weighted Precision = 0.8851280256568586
+% Weighted Recall = 0.8666666666666667
+% Weighted fMeasure = 0.8687583284982321
+\caption{Particle Swarm - CategoryScalingFactor: 26.16484375; ProductScalingFactor: 35.2538664392; F1 0.883120876133 }
+\label{fig:NParticle-Swarm}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{netbeans/nm_netbeans.pdf}
+% 62.5063476562	60.5654296875	0.867974178031
+% Weighted Precision = 0.890880176287039
+% Weighted Recall = 0.8733333333333334
+% Weighted fMeasure = 0.8750085437079594
+\caption{Nelder-Mead - CategoryScalingFactor: 62.5063476562; ProductScalingFactor: 60.5654296875; F1: 0.867974178031}
+\label{fig:NNelder-Mead}
+\end{figure}
+
+
+\section{Eclipse}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{eclipse/g_eclipse.pdf}
+% 30.3	74.85	0.805438510439
+% Weighted Precision = 0.7815326590680762
+% Weighted Recall = 0.7552533992583439
+% Weighted fMeasure = 0.7433095373364921
+\caption{Grid Search - CategoryScalingFactor: 30.3; ProductScalingFactor: 74.85; F1: 0.805438510439 }
+\label{fig:EGrid-Search}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{eclipse/rnd_eclipse.pdf}
+% 21.4706388064	66.4344560908	0.803852086746
+% Weighted Precision = 0.7740461303340885
+% Weighted Recall = 0.746600741656366
+% Weighted fMeasure = 0.7320813185404328
+\caption{Random Search - CategoryScalingFactor: 21.4706388064; ProductScalingFactor: 66.4344560908; F1: 0.803852086746 }
+\label{fig:ERandom-Search}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{eclipse/ps_eclipse.pdf}
+%  79.1812155219	43.9944036105	0.807388628048
+% Weighted Precision = 0.7958916785536784
+% Weighted Recall = 0.7527812113720647
+% Weighted fMeasure = 0.7393435160565648
+\caption{Particle Swarm - CategoryScalingFactor: 79.1812155219; ProductScalingFactor: 43.9944036105; F1 0.807388628048 }
+\label{fig:EParticle-Swarm}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{eclipse/nm_eclipse.pdf}
+% 63.1231155396	61.8991088867	0.799896380102
+% Weighted Precision = 0.7856304393351348
+% Weighted Recall = 0.746600741656366
+% Weighted fMeasure = 0.7339884508542005
+\caption{Nelder-Mead - CategoryScalingFactor: 63.1231155396; ProductScalingFactor: 61.8991088867; F1: 0.799896380102}
+\label{fig:ENelder-Mead}
+\end{figure}
+
+\section{Firefox}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{firefox/g_firefox.pdf}
+% 82.275	22.875	0.755870571277
+% Weighted Precision = 0.8020160191985232
+% Weighted Recall = 0.7485345838218056
+% Weighted fMeasure = 0.737166341815461
+\caption{Grid Search - CategoryScalingFactor: 82.27; ProductScalingFactor: 22.875; F1: 0.755870571277 }
+\label{fig:FGrid-Search}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{firefox/rnd_firefox.pdf}
+% 50.0371981972	16.7753823766	0.755348867293
+% Weighted Precision = 0.7871791604056786
+% Weighted Recall = 0.757913247362251
+% Weighted fMeasure = 0.7479153909273698  
+\caption{Random Search - CategoryScalingFactor: 50.0371981972; ProductScalingFactor: 16.7753823766; F1: 0.755348867293 }
+\label{fig:FRandom-Search}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{firefox/ps_firefox.pdf}
+% 63.91015625	20.6705116755	0.762345239413
+% Weighted Precision = 0.783120144075053
+% Weighted Recall = 0.750293083235639
+% Weighted fMeasure = 0.7418791158510556
+\caption{Particle Swarm - CategoryScalingFactor: 63.91015625; ProductScalingFactor: 20.6705116755; F1 0.762345239413 }
+\label{fig:FParticle-Swarm}
+\end{figure}
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\textwidth]{firefox/nm_firefox.pdf}
+% 59.0853538513	62.4491157532	0.734276895929
+% Weighted Precision = 0.7805827062358932
+% Weighted Recall = 0.7309495896834706
+% Weighted fMeasure = 0.7132953047179516
+\caption{Nelder-Mead - CategoryScalingFactor: 59.0853538513; ProductScalingFactor: 62.4491157532; F1: 0.734276895929}
+\label{fig:FNelder-Mead}
+\end{figure}
+
+
+\end{document}
+
+
