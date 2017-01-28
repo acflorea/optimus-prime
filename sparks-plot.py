@@ -4,8 +4,8 @@ import matplotlib.gridspec as gridspec
 from mpl_toolkits.mplot3d import axes3d, Axes3D  # <-- Note the capitalization!
 
 # dataset = "netbeans"
-# dataset = "eclipse"
-dataset = "firefox"
+dataset = "eclipse"
+# dataset = "firefox"
 
 # Particle Swarm
 ps_df = pd.read_csv('data/' + dataset + '/ps_out.csv')
