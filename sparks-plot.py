@@ -3,8 +3,8 @@ from matplotlib import pylab as plt
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.mplot3d import axes3d, Axes3D  # <-- Note the capitalization!
 
-# dataset = "netbeans"
-dataset = "eclipse"
+dataset = "netbeans"
+# dataset = "eclipse"
 # dataset = "firefox"
 
 # Particle Swarm
