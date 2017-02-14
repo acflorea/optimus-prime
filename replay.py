@@ -3,6 +3,8 @@ import time
 import glob
 import os
 
+key = "ParagraphVector"
+
 folder = '/Users/acflorea/phd/mariana-triage/'
 pingInterval = 10
 
@@ -13,9 +15,10 @@ sparkLocation = '/root/ibm/spark-dk-1.6.3.0/spark/bin/spark-submit'
 
 sparkParams = '-Dconfig.file=./application.conf ' \
               '-Dmariana.global.sourceModel={0} ' \
-              '-Dmariana.global.startEpoch={1} '
+              '-Dmariana.global.startEpoch={1} ' \
+              '-Dprogram.key=' + key
 
-targetJar = "/dev/mariana-triage/code/mariana-triage-assembly-1.2.4.jar"
+targetJar = "/data/mariana-triage/code/mariana-triage-assembly-1.2.5.jar"
 
 
 # finds a pid based on a search key
@@ -38,7 +41,7 @@ def findMostRecentModel(folder):
 
 while True:
     print "Here we go, searching for ParagraphVector"
-    pids = findProcess("ParagraphVector")
+    pids = findProcess(key)
     if (len(pids) > 1):
         print "Hurray ... still running"
     else:
