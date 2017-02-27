@@ -3,22 +3,22 @@ import time
 import glob
 import os
 
-key = "ParagraphVector"
-
-folder = '/Users/acflorea/phd/mariana-triage/'
 pingInterval = 10
 
 maxEpochs = 50
 
 sparkLocation = '/root/ibm/spark-dk-1.6.3.0/spark/bin/spark-submit'
-# sparkLocation = '/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/bin/spark-submit'
+sparkLocation = '/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/bin/spark-submit'
 
-sparkParams = '-Dconfig.file=./application.conf ' \
-              '-Dmariana.global.sourceModel={0} ' \
-              '-Dmariana.global.startEpoch={1} ' \
-              '-Dprogram.key=' + key
+configsLocation = '/Users/acflorea/phd/optimus-prime/configs/'
 
-targetJar = "/data/mariana-triage/code/mariana-triage-assembly-1.2.5.jar"
+dbs = ["netbeans", "eclipse", "firefox_new"]
+trainBatchSizes = [5, 10, 20, 30, 50, 100]
+averagingFrequencies = [1, 5, 10, 20, 50]
+workersList = [1, 4, 8, 12, 16]
+
+targetJar = "/data/mariana-triage/code/mariana-triage-assembly-1.3.0.jar"
+targetJar = "/Users/acflorea/phd/mariana-triage/target/scala-2.10/mariana-triage-assembly-1.3.0.jar"
 
 
 # finds a pid based on a search key
@@ -39,39 +39,69 @@ def findMostRecentModel(folder):
         None
 
 
-while True:
-    print "Here we go, searching for ParagraphVector"
-    pids = findProcess(key)
-    if (len(pids) > 1):
-        print "Hurray ... still running"
-    else:
-        # process has died - attempt to relaunch
-        print "Cant' find process, attempting to restart"
-        mostRecentModel = findMostRecentModel(folder)
-        if (mostRecentModel):
-            counter = mostRecentModel[mostRecentModel.rfind('_') + 1: -4]
-            if counter >= maxEpochs:
-                # Stop at maxEpochs
-                break
-            print "Most recent model is " + mostRecentModel + " Counter is " + counter
-            newModel = mostRecentModel[
-                       mostRecentModel.rfind('/') + 1:mostRecentModel.rfind('_')] + "_" + counter + ".zip"
-        else:
-            counter = 0
-            newModel = ''
-            print "No model found"
+for db in dbs:
+    for trainBatchSize in trainBatchSizes:  # trainBatchSize
+        for averagingFrequency in averagingFrequencies:  # averagingFrequency
+            for workers in workersList:
 
-        call(["nohup", sparkLocation,
-              '--class', 'dr.acf.experiments.ParagraphVector',
-              '--master=local[5]',
-              '--executor-memory', '25G',
-              '--driver-memory', '128G',
-              '--driver-java-options',
-              '-Xmx156G',
-              '--driver-java-options',
-              sparkParams.format(newModel, counter),
-              targetJar],
-             stdout=open('./triage.out', 'w'),
-             stderr=open('./triage.err', 'a'))
+                key = '{0}_{1}_{2}_{3}'.format(db, trainBatchSize, averagingFrequency, workers)
+                folder = "./" + key
 
-    time.sleep(pingInterval)
+                if os.path.exists(folder):
+
+                    print folder + " exists. Skip!"
+
+                else:
+
+                    print "Creating folder " + folder
+                    os.mkdir(folder)
+
+                    sparkParams = '-Dconfig.file={0}.conf ' \
+                                  '-Dmariana.global.sourceModel={1} ' \
+                                  '-Dmariana.global.startEpoch={2} ' \
+                                  '-Dmariana.global.trainBatchSize={3} ' \
+                                  '-Dmariana.global.averagingFrequency={4} ' \
+                                  '-Dprogram.key=' + key
+
+                    while True:
+                        print "Here we go, searching for ParagraphVector"
+                        pids = findProcess(key)
+                        if (len(pids) > 1):
+                            print "Hurray ... still running"
+                        else:
+                            # process has died - attempt to relaunch
+                            print "Cant' find process, attempting to restart"
+                            mostRecentModel = findMostRecentModel(folder)
+                            if (mostRecentModel):
+                                counter = mostRecentModel[mostRecentModel.rfind('_') + 1: -4]
+                                if counter >= maxEpochs:
+                                    # Stop at maxEpochs
+                                    break
+                                print "Most recent model is " + mostRecentModel + " Counter is " + counter
+                                newModel = mostRecentModel[
+                                           mostRecentModel.rfind('/') + 1:mostRecentModel.rfind(
+                                               '_')] + "_" + counter + ".zip"
+                            else:
+                                counter = 0
+                                newModel = ''
+                                print "No model found"
+
+                            formattedSparkParams = sparkParams.format(configsLocation + db, newModel, counter,
+                                                                      trainBatchSize,
+                                                                      averagingFrequency)
+
+                            call(["nohup", sparkLocation,
+                                  '--class', 'dr.acf.experiments.ParagraphVector',
+                                  '--master=local[' + str(workers) + ']',
+                                  '--executor-memory', '25G',
+                                  '--driver-memory', '128G',
+                                  '--driver-java-options',
+                                  '-Xmx156G',
+                                  '--driver-java-options',
+                                  formattedSparkParams,
+                                  targetJar],
+                                 stdout=open(folder + '/triage.out', 'w'),
+                                 stderr=open(folder + '/triage.err', 'a'),
+                                 cwd=folder)
+
+                        time.sleep(pingInterval)
