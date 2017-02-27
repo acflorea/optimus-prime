@@ -4,6 +4,8 @@ import glob
 import os
 import shutil
 
+architecture = "rnn"
+
 pingInterval = 10
 
 maxEpochs = 50
@@ -45,7 +47,7 @@ for db in dbs:
         for averagingFrequency in averagingFrequencies:  # averagingFrequency
             for workers in workersList:
 
-                key = '{0}_{1}_{2}_{3}'.format(db, trainBatchSize, averagingFrequency, workers)
+                key = '{0}_{1}_{2}_{3}_{4}'.format(architecture, db, trainBatchSize, averagingFrequency, workers)
                 folder = "./" + key
 
                 if os.path.exists(folder):
@@ -56,16 +58,17 @@ for db in dbs:
 
                     print "Creating folder " + folder
                     os.mkdir(folder)
-                    dataFolder = configsLocation + db + '/data_rnn'
+                    dataFolder = configsLocation + db + '/data_' + architecture
                     if os.path.exists(dataFolder):
                         print "Copy data folder from " + dataFolder
-                        shutil.copytree(dataFolder, folder + '/data_rnn')
+                        shutil.copytree(dataFolder, folder + '/data_' + architecture)
 
                     sparkParams = '-Dconfig.file={0}.conf ' \
                                   '-Dmariana.global.sourceModel={1} ' \
                                   '-Dmariana.global.startEpoch={2} ' \
                                   '-Dmariana.global.trainBatchSize={3} ' \
                                   '-Dmariana.global.averagingFrequency={4} ' \
+                                  '-Dmariana.global.architecture={5} ' \
                                   '-Dprogram.key=' + key
 
                     while True:
@@ -93,7 +96,7 @@ for db in dbs:
 
                             formattedSparkParams = sparkParams.format(configsLocation + db, newModel, counter,
                                                                       trainBatchSize,
-                                                                      averagingFrequency)
+                                                                      averagingFrequency, architecture)
 
                             call(["nohup", sparkLocation,
                                   '--class', 'dr.acf.experiments.ParagraphVector',
