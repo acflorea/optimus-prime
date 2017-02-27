@@ -13,6 +13,7 @@ maxEpochs = 50
 sparkLocation = '/root/ibm/spark-dk-1.6.3.0/spark/bin/spark-submit'
 sparkLocation = '/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/bin/spark-submit'
 
+configsLocation = '/data/mariana-triage/tests_'+architecture+'/configs/'
 configsLocation = '/Users/acflorea/phd/optimus-prime/configs/'
 
 dbs = ["netbeans", "eclipse", "firefox_new"]
