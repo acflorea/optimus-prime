@@ -56,7 +56,10 @@ for db in dbs:
 
                     print "Creating folder " + folder
                     os.mkdir(folder)
-                    shutil.copytree(configsLocation + db + '/data_rnn', folder + '/data_rnn')
+                    dataFolder = configsLocation + db + '/data_rnn'
+                    if os.path.exists(dataFolder):
+                        print "Copy data folder from " + dataFolder
+                        shutil.copytree(dataFolder, folder + '/data_rnn')
 
                     sparkParams = '-Dconfig.file={0}.conf ' \
                                   '-Dmariana.global.sourceModel={1} ' \
