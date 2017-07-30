@@ -17,9 +17,9 @@ configsLocation = '/data/mariana-triage/tests_'+architecture+'/configs/'
 configsLocation = '/Users/acflorea/phd/optimus-prime/configs/'
 
 dbs = ["netbeans", "eclipse", "firefox_new"]
-trainBatchSizes = [5, 10, 20, 30, 50, 100]
-averagingFrequencies = [1, 5, 10, 20, 50]
-workersList = [1, 4, 8, 12, 16]
+trainBatchSizes = [10, 25, 100, 250]
+averagingFrequencies = [1, 5, 10]
+workersList = [4, 8, 12]
 
 targetJar = "/data/mariana-triage/code/mariana-triage-assembly-1.3.0.jar"
 targetJar = "/Users/acflorea/phd/mariana-triage/target/scala-2.10/mariana-triage-assembly-1.3.0.jar"
@@ -67,7 +67,7 @@ for db in dbs:
                     sparkParams = '-Dconfig.file={0}.conf ' \
                                   '-Dmariana.global.sourceModel={1} ' \
                                   '-Dmariana.global.startEpoch={2} ' \
-                                  '-Dmariana.global.trainBatchSize={3} ' \
+                                  '-Dmariana.global.batchSize={3} ' \
                                   '-Dmariana.global.averagingFrequency={4} ' \
                                   '-Dmariana.global.architecture={5} ' \
                                   '-Dprogram.key=' + key
