@@ -13,7 +13,7 @@ def main(args):
 
     scores = cross_val_score(clf, X_train, y_train, cv=10)
 
-    return scores
+    sys.exit(scores)
 
 if __name__ == "__main__":
     # execute only if run as a script
