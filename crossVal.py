@@ -6,7 +6,12 @@ import time
 
 
 def main(args):
+    # "/Users/aflorea/phd/libsvm-datasets/adult/a1a.libsvm" "rbf" 1 3 0.0
     fileName = args[1]
+    kernel = args[2]
+    C = float(args[3])
+    Degree = int(args[4])
+    Coef0 = float(args[5])
 
     dataset = load_svmlight_file(fileName)
 
@@ -15,14 +20,14 @@ def main(args):
     X_train = dataset[0].todense()
     y_train = dataset[1]
 
-    clf = svm.SVC(kernel='linear', C=1)  # .fit(X_train, y_train)
+    clf = svm.SVC(kernel=kernel, C=C, degree=Degree, coef0=Coef0)  # .fit(X_train, y_train)
 
     scores = cross_val_score(clf, X_train, y_train, cv=10)
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    # print("--- %s seconds ---" % (time.time() - start_time))
 
     # calculate stuff
-    sys.stdout.write(str(scores))
+    sys.stdout.write(','.join(str(e) for e in scores))
     sys.stdout.flush()
     sys.exit(0)
 
