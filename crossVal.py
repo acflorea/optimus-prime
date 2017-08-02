@@ -6,12 +6,13 @@ import time
 
 
 def main(args):
-    # "/Users/aflorea/phd/libsvm-datasets/adult/a1a.libsvm" "rbf" 1 3 0.0
+    # "/Users/aflorea/phd/libsvm-datasets/adult/a1a.libsvm" "rbf" 1 "auto" 3 0.0
     fileName = args[1]
     kernel = args[2]
     C = float(args[3])
-    Degree = int(args[4])
-    Coef0 = float(args[5])
+    Gamma = args[4]
+    Degree = int(args[5])
+    Coef0 = float(args[6])
 
     dataset = load_svmlight_file(fileName)
 
