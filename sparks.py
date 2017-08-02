@@ -16,7 +16,12 @@ configFile = '/Users/acflorea/Bin/spark-1.6.2-bin-hadoop2.6/columbugus-conf/netb
 # fsRoot = '/dev/optimus-prime/data/firefox'
 fsRoot = '/Users/acflorea/phd/columbugus_data/netbeans_final_test'
 
-numEvals = 3
+numEvals = 10
+
+
+def testFn(categoryScalingFactor, productScalingFactor):
+    print ("X" * 100)
+    return categoryScalingFactor + productScalingFactor
 
 
 def objectiveFunction(categoryScalingFactor, productScalingFactor,
@@ -73,7 +78,7 @@ for algorithm, identifier in solvers.iteritems():
     print("RUN - " + algorithm)
     print("*" * 80)
 
-    optimap_params, info, _ = optunity.maximize(objectiveFunction,
+    optimap_params, info, _ = optunity.maximize(testFn,
                                                 num_evals=numEvals,
                                                 categoryScalingFactor=[0, 120],
                                                 productScalingFactor=[0, 120],
