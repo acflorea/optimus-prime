@@ -21,13 +21,14 @@ def main(args):
     X_train = dataset[0].todense()
     y_train = dataset[1]
 
-    clf = svm.SVC(kernel=kernel, C=C, degree=Degree, coef0=Coef0)  # .fit(X_train, y_train)
+    clf = svm.SVC(kernel=kernel, C=C, degree=Degree, coef0=Coef0, gamma=Gamma)  # .fit(X_train, y_train)
 
     scores = cross_val_score(clf, X_train, y_train, cv=10)
 
     # print("--- %s seconds ---" % (time.time() - start_time))
 
     # calculate stuff
+    # sys.stdout.write(','.join(args))
     sys.stdout.write(','.join(str(e) for e in scores))
     sys.stdout.flush()
     sys.exit(0)
