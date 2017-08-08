@@ -11,6 +11,8 @@ def main(args):
     kernel = args[2]
     C = float(args[3])
     Gamma = args[4]
+    if Gamma != 'auto':
+        Gamma = float(Gamma)
     Degree = int(args[5])
     Coef0 = float(args[6])
 
