@@ -1,5 +1,5 @@
 from sklearn.datasets import load_svmlight_file
-from sklearn.cross_validation import cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn import svm
 import sys
 import time
@@ -24,6 +24,8 @@ def main(args):
     y_train = dataset[1]
 
     clf = svm.SVC(kernel=kernel, C=C, degree=Degree, coef0=Coef0, gamma=Gamma)  # .fit(X_train, y_train)
+
+    # print(kernel, C, Degree, Coef0, Gamma)
 
     scores = cross_val_score(clf, X_train, y_train, cv=10)
 

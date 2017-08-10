@@ -3,11 +3,14 @@ import optunity.metrics
 
 import sklearn.svm
 
-from sklearn.datasets import load_digits, load_svmlight_file
+from sklearn.datasets import load_svmlight_file
+
+from subprocess import Popen, PIPE
 
 import time
 
-dataset = load_svmlight_file("/Users/acflorea/phd/libsvm-datasets/adult/a1a.libsvm")
+fileName = "/Users/aflorea/phd/libsvm-datasets/adult/a1a.libsvm"
+dataset = load_svmlight_file(fileName)
 
 n = dataset[1].size
 
@@ -34,14 +37,43 @@ def svm_rbf_tuned_acc(x_train, y_train, x_test, y_test, C, logGamma):
 
 
 svm_rbf_tuned_acc = cv_decorator(svm_rbf_tuned_acc)
+
+
 # this is equivalent to the more common syntax below
 # @optunity.cross_validated(x=data, y=labels, num_folds=5)
 # def svm_rbf_tuned_auroc...
 
+def external_svm(kernel, C, gamma, degree, coef0):
+    if gamma == None:
+        gamma = "auto"
+
+    if degree == None:
+        degree = "3"
+    else:
+        degree = int(round(degree))
+
+    if coef0 == None:
+        coef0 = "0.0"
+
+    process = Popen(["python", "/Users/aflorea/phd/optimus-prime/crossVal.py",
+                     fileName, kernel, str(C), str(gamma), str(degree), str(coef0)], stdout=PIPE)
+    (output, err) = process.communicate()
+
+    print str(output)
+
+    return -1.0
+
+
 start_time = time.time()
 
-optimal_rbf_pars, info, _ = optunity.maximize(svm_rbf_tuned_acc, num_evals=150, C=[0, 10], logGamma=[-5, 0],
-                                              pmap=optunity.pmap)
+search = {'kernel': {'linear': {'C': [0, 2]},
+                     'rbf': {'gamma': [0, 1], 'C': [0, 10]},
+                     'poly': {'degree': [2, 5], 'C': [0, 50], 'coef0': [0, 1]}
+                     }
+          }
+
+optimal_rbf_pars, info, _ = optunity.maximize_structured(external_svm, num_evals=150, search_space=search,
+                                                         pmap=optunity.pmap)
 
 print("Optimal parameters: " + str(optimal_rbf_pars))
 print("ACC of tuned SVM with RBF kernel: %1.3f" % info.optimum)
