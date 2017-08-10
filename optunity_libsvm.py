@@ -59,9 +59,11 @@ def external_svm(kernel, C, gamma, degree, coef0):
                      fileName, kernel, str(C), str(gamma), str(degree), str(coef0)], stdout=PIPE)
     (output, err) = process.communicate()
 
-    print str(output)
+    values = map(float, str(output).split(","))
 
-    return -1.0
+    print values
+
+    return sum(values) / len(values)
 
 
 start_time = time.time()
