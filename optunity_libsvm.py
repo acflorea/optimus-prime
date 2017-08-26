@@ -18,6 +18,11 @@ def main(args):
     global fileName
     fileName = args[2]
 
+    num_evals = int(args[3])
+    solver_name = args[4]
+
+    print("Input: " + str(args))
+
     search_space = {
         'kernel': {'linear': {'C': [0, 10]},
                    'rbf': {'gamma': [0, 1], 'C': [0, 10]},
@@ -26,7 +31,6 @@ def main(args):
     }
 
     f = external_svm
-    num_evals = 150
 
     tree = search_spaces.SearchTree(search_space)
     box = tree.to_box()
@@ -39,15 +43,41 @@ def main(args):
     f = tree.wrap_decoder(f)
     f = api._wrap_hard_box_constraints(f, box, -sys.float_info.max)
 
-    suggestion = api.suggest_solver(num_evals, "particle swarm", **box)
+    # build solver
+    suggestion = api.suggest_solver(num_evals, solver_name, **box)
     solver = api.make_solver(**suggestion)
-    solution, details = api.optimize(solver, f, maximize=True, max_evals=num_evals,
-                                     pmap=optunity.pmap, decoder=tree.decode)
+
+    # solution, details = api.optimize(solver, f, maximize=True, max_evals=num_evals,
+    #                                  pmap=optunity.pmap, decoder=tree.decode)
+
+    # maximize(f, num_evals=50, solver_name=None, pmap=map, **kwargs)
+    solution, details, suggestion = optunity.maximize(external_svm_wrapper, num_evals=num_evals,
+                                                      solver_name=solver_name,
+                                                      kernelIndex=[0, 1], C=[0, 10], gamma=[0, 1], degree=[3, 5],
+                                                      coef0=[0, 1]
+                                                      )
 
     print("Optimal parameters: " + str(solution))
     print("Optimal value: " + str(details.optimum))
 
     print("--- %s seconds ---" % (time.time() - start_time))
+
+i = 0
+
+def external_svm_wrapper(kernelIndex, C, gamma, degree, coef0):
+    if kernelIndex < 0.33:
+        kernel = 'linear'
+    elif kernelIndex < 0.66:
+        kernel = 'rbf'
+    else:
+        kernel = 'poly'
+
+    global i
+    i = i + 1
+
+    print i, kernel, C, gamma, degree, coef0
+
+    return external_svm(kernel, C, gamma, degree, coef0)
 
 
 def external_svm(kernel, C, gamma, degree, coef0):
