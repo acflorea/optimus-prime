@@ -1,5 +1,7 @@
 import optunity
 import optunity.metrics
+from optunity import search_spaces, api
+from optunity import functions as fun
 from subprocess import Popen, PIPE
 import time
 import sys
@@ -16,18 +18,34 @@ def main(args):
     global fileName
     fileName = args[2]
 
-    search = {
+    search_space = {
         'kernel': {'linear': {'C': [0, 10]},
                    'rbf': {'gamma': [0, 1], 'C': [0, 10]},
                    'poly': {'degree': [2, 5], 'C': [0, 10], 'coef0': [0, 1]}
                    }
     }
 
-    optimal_rbf_pars, info, _ = optunity.maximize_structured(external_svm, num_evals=150, search_space=search,
-                                                             pmap=optunity.pmap)
+    f = external_svm
+    num_evals = 150
 
-    print("Optimal parameters: " + str(optimal_rbf_pars))
-    print("Optimal value: " + str(info.optimum))
+    tree = search_spaces.SearchTree(search_space)
+    box = tree.to_box()
+
+    # we need to position the call log here
+    # because the function signature used later on is internal logic
+    f = fun.logged(f)
+
+    # wrap the decoder and constraints for the internal search space representation
+    f = tree.wrap_decoder(f)
+    f = api._wrap_hard_box_constraints(f, box, -sys.float_info.max)
+
+    suggestion = api.suggest_solver(num_evals, "particle swarm", **box)
+    solver = api.make_solver(**suggestion)
+    solution, details = api.optimize(solver, f, maximize=True, max_evals=num_evals,
+                                     pmap=optunity.pmap, decoder=tree.decode)
+
+    print("Optimal parameters: " + str(solution))
+    print("Optimal value: " + str(details.optimum))
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -49,10 +67,11 @@ def external_svm(kernel, C, gamma, degree, coef0):
     (output, err) = process.communicate()
 
     values = map(float, str(output).split(","))
+    average = sum(values) / len(values)
 
-    print values
+    print values, average
 
-    return sum(values) / len(values)
+    return average
 
 
 if __name__ == "__main__":
