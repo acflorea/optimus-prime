@@ -5,6 +5,7 @@ from optunity import functions as fun
 from subprocess import Popen, PIPE
 import time
 import sys
+import math
 
 scriptName = ""
 fileName = ""
@@ -53,7 +54,10 @@ def main(args):
     # maximize(f, num_evals=50, solver_name=None, pmap=map, **kwargs)
     solution, details, suggestion = optunity.maximize(external_svm_wrapper, num_evals=num_evals,
                                                       solver_name=solver_name,
-                                                      kernelIndex=[0, 1], C=[0, 10], gamma=[0, 1], degree=[3, 5],
+                                                      kernelIndex=[0, 1],
+                                                      logC=[0, 1],
+                                                      logGamma=[0, 1],
+                                                      degree=[3, 5],
                                                       coef0=[0, 1]
                                                       )
 
@@ -62,15 +66,21 @@ def main(args):
 
     print("--- %s seconds ---" % (time.time() - start_time))
 
-i = 0
 
-def external_svm_wrapper(kernelIndex, C, gamma, degree, coef0):
+i = 0
+lmd = 10
+
+
+def external_svm_wrapper(kernelIndex, logC, logGamma, degree, coef0):
     if kernelIndex < 0.33:
         kernel = 'linear'
     elif kernelIndex < 0.66:
         kernel = 'rbf'
     else:
         kernel = 'poly'
+
+    C = math.log(1 - logC) / (-lmd)
+    gamma = math.log(1 - logGamma) / (-lmd)
 
     global i
     i = i + 1
