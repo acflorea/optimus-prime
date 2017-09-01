@@ -54,6 +54,7 @@ def main(args):
     # maximize(f, num_evals=50, solver_name=None, pmap=map, **kwargs)
     solution, details, suggestion = optunity.maximize(external_svm_wrapper, num_evals=num_evals,
                                                       solver_name=solver_name,
+                                                      pmap=optunity.pmap,
                                                       kernelIndex=[0, 1],
                                                       logC=[0, 1],
                                                       logGamma=[0, 1],
@@ -85,8 +86,6 @@ def external_svm_wrapper(kernelIndex, logC, logGamma, degree, coef0):
     global i
     i = i + 1
 
-    print i, kernel, C, gamma, degree, coef0
-
     return external_svm(kernel, C, gamma, degree, coef0)
 
 
@@ -109,7 +108,7 @@ def external_svm(kernel, C, gamma, degree, coef0):
     values = map(float, str(output).split(","))
     average = sum(values) / len(values)
 
-    print values, average
+    print [i, kernel, C, gamma, degree, coef0, output, average]
 
     return average
 
