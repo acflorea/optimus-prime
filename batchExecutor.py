@@ -17,12 +17,39 @@ def main(args):
                 '/iris/iris.libsvm',
                 '/poker/poker.libsvm',
                 '/wine/wine.libsvm',
+                '/adult/a1a.libsvm',
                 '/adult/a6a.libsvm',
                 ]
 
-    solvers = {'particle swarm': 'ps', 'nelder-mead': 'nm', 'random search': 'rnd', 'grid search': 'g'}
+    solvers = {'particle swarm': 'ps',
+               'nelder-mead': 'nm',
+               'random search': 'rnd',
+               'grid search': 'g',
+               }
+
+    algorithms = {"ManagerWorker": "MW",
+                  "Leapfrog": "LF",
+                  "SeqSplit": "SS",
+                  "Parametrization": "P",
+                  }
 
     for dataset in datasets:
+
+        for algorithm in algorithms:
+            # Build the output file name
+            outputFileName = datasetsRootFolder + dataset + "." + algorithms[algorithm] + '.log'
+
+            call(["/Users/aflorea/goworkspace/bin/goptim",
+                  "-fileName", datasetsRootFolder + dataset,
+                  "-maxAttempts", "250",
+                  "-fct", "Script",
+                  "-noOfExperiments", "1",
+                  "-alg", algorithm,
+                  "-script", script
+                  ],
+                 stdout=open(outputFileName, 'w'),
+                 stderr=open(outputFileName, 'w'),
+                 cwd=datasetsRootFolder)
 
         for solver in solvers:
             # Build the output file name
