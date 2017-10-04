@@ -33,44 +33,55 @@ def main(args):
                   "Parametrization": "P",
                   }
 
+    targetStops = [50, 100, 150, 200, 250, 0]
+
+    optunity = False
+    go = True
+
     for dataset in datasets:
 
-        for algorithm in algorithms:
-            # Build the output file name
-            outputFileName = datasetsRootFolder + dataset + "." + algorithms[algorithm] + '.log'
+        if go:
+            for algorithm in algorithms:
+                for targetStop in targetStops:
+                    # Build the output file name
+                    outputFileName = datasetsRootFolder + dataset + \
+                                     "." + algorithms[algorithm] + \
+                                     "." + targetStop + '.log'
 
-            call(["/Users/aflorea/goworkspace/bin/goptim",
-                  "-fileName", datasetsRootFolder + dataset,
-                  "-maxAttempts", "250",
-                  "-fct", "Script",
-                  "-noOfExperiments", "1",
-                  "-alg", algorithm,
-                  "-script", script
-                  ],
-                 stdout=open(outputFileName, 'w'),
-                 stderr=open(outputFileName, 'w'),
-                 cwd=datasetsRootFolder)
+                    call(["/Users/aflorea/goworkspace/bin/goptim",
+                          "-fileName", datasetsRootFolder + dataset,
+                          "-maxAttempts", "250",
+                          "-fct", "Script",
+                          "-noOfExperiments", "10",
+                          "-alg", algorithm,
+                          "-script", script,
+                          "-targetstop", targetStop
+                          ],
+                         stdout=open(outputFileName, 'w'),
+                         stderr=open(outputFileName, 'w'),
+                         cwd=datasetsRootFolder)
 
-        for solver in solvers:
-            # Build the output file name
-            outputFileName = datasetsRootFolder + dataset + "." + solvers[solver] + '.log'
+        if optunity:
+            for solver in solvers:
+                # Build the output file name
+                outputFileName = datasetsRootFolder + dataset + "." + solvers[solver] + '.log'
 
-            # python
-            # optunity_libsvm.py
-            # "/Users/aflorea/phd/optimus-prime/crossVal.py" "/Users/aflorea/phd/libsvm-datasets/adult/a1a.libsvm"
-            # 250
-            # "random search"
+                # python
+                # optunity_libsvm.py
+                # "/Users/aflorea/phd/optimus-prime/crossVal.py" "/Users/aflorea/phd/libsvm-datasets/adult/a1a.libsvm"
+                # 250
+                # "random search"
 
-            call(["python",
-                  executor,
-                  script,
-                  datasetsRootFolder + dataset,
-                  "250",
-                  solver
-                  ],
-                 stdout=open(outputFileName, 'w'),
-                 stderr=open(outputFileName, 'w'),
-                 cwd=datasetsRootFolder)
+                call(["python",
+                      executor,
+                      script,
+                      datasetsRootFolder + dataset,
+                      "250",
+                      solver
+                      ],
+                     stdout=open(outputFileName, 'w'),
+                     stderr=open(outputFileName, 'w'),
+                     cwd=datasetsRootFolder)
 
 
 if __name__ == "__main__":
