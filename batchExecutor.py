@@ -46,13 +46,13 @@ def main(args):
                     # Build the output file name
                     outputFileName = datasetsRootFolder + dataset + \
                                      "." + algorithms[algorithm] + \
-                                     "." + targetStop + '.log'
+                                     "." + str(targetStop) + '.log'
 
                     call(["/Users/aflorea/goworkspace/bin/goptim",
                           "-fileName", datasetsRootFolder + dataset,
                           "-maxAttempts", "250",
                           "-fct", "Script",
-                          "-noOfExperiments", "10",
+                          "-noOfExperiments", "25",
                           "-alg", algorithm,
                           "-script", script,
                           "-targetstop", targetStop
