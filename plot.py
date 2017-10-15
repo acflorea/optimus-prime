@@ -19,11 +19,12 @@ for n in x:
 fig, ax = plt.subplots(figsize=(6, 6))
 # 1st axis is X, 2nd is Y
 ax.imshow(p
-          , cmap='ocean'
+          , cmap='Greys'
           , interpolation='none'
           , origin='lower'
           , aspect="auto"
           # , extent=[1, multiplier * N + 1, 1, N + 1]
           )
 
+plt.savefig("heatmap_prob.pdf", format='pdf')
 plt.show()

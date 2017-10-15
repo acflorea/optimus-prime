@@ -14,14 +14,14 @@ Y = array[:, 8]
 seed = 7
 # prepare models
 models = []
-models.append(('GO-MW', np.array([164, 169, 172, 223, 224, 194])))
-models.append(('GO-SS', np.array([194, 133, 167, 203, 156, 215])))
-models.append(('GO-LF', np.array([194, 203, 214, 220, 189, 162])))
-models.append(('GO-P', np.array([148, 138, 187, 130, 158, 177])))
-models.append(('Opt-RS', np.array([250])))
-models.append(('Opt-GS', np.array([240])))
-models.append(('Opt-PS', np.array([250])))
-models.append(('Opt-NM', np.array([108, 142, 17, 6, 6, 62])))
+models.append(('ManagerWorker', np.array([164, 169, 172, 223, 224, 194])))
+models.append(('SequenceSplit', np.array([194, 133, 167, 203, 156, 215])))
+models.append(('LeapFrog', np.array([194, 203, 214, 220, 189, 162])))
+models.append(('Parametrization', np.array([148, 138, 187, 130, 158, 177])))
+# models.append(('Optunity - RS', np.array([250])))
+# models.append(('Optunity - GS', np.array([240])))
+# models.append(('Optunity - PS', np.array([250])))
+# models.append(('Optunity - NM', np.array([108, 142, 17, 6, 6, 62])))
 # evaluate each model in turn
 results = []
 
@@ -34,8 +34,10 @@ for name, cv_results in models:
     print(msg)
 # boxplot algorithm comparison
 fig = plt.figure()
-fig.suptitle('Algorithm Comparison')
+fig.suptitle('Number of runs per type of parallel random generator')
 ax = fig.add_subplot(111)
 plt.boxplot(results)
 ax.set_xticklabels(names)
-plt.show()
+
+plt.savefig("pp.pdf", format='pdf')
+# plt.show()
