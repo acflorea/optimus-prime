@@ -15,7 +15,6 @@ def main(args):
     datasets = ['/cancer/breast-cancer_scale.libsvm',
                 '/diabetes/diabetes_scale.libsvm',
                 '/iris/iris.libsvm',
-                '/poker/poker.libsvm',
                 '/wine/wine.libsvm',
                 '/adult/a1a.libsvm',
                 '/adult/a6a.libsvm',
@@ -33,7 +32,9 @@ def main(args):
                   "Parametrization": "P",
                   }
 
-    targetStops = [50, 100, 150, 200, 250, 0]
+    targetStops = ["50", "100", "150", "200", "250", "0"]
+
+    workers = ["1", "2", "3", "4", "6", "8"]
 
     optunity = False
     go = True
@@ -42,11 +43,13 @@ def main(args):
 
         if go:
             for algorithm in algorithms:
-                for targetStop in targetStops:
+                # for targetStop in targetStops:
+                for worker in workers:
                     # Build the output file name
                     outputFileName = datasetsRootFolder + dataset + \
                                      "." + algorithms[algorithm] + \
-                                     "." + str(targetStop) + '.log'
+                                     ".w-" + str(worker) + '.log'
+                    # "." + str(targetStop) + '.log'
 
                     call(["/Users/aflorea/goworkspace/bin/goptim",
                           "-fileName", datasetsRootFolder + dataset,
@@ -55,7 +58,8 @@ def main(args):
                           "-noOfExperiments", "25",
                           "-alg", algorithm,
                           "-script", script,
-                          "-targetstop", targetStop
+                          "-w", worker
+                          # "-targetstop", targetStop
                           ],
                          stdout=open(outputFileName, 'w'),
                          stderr=open(outputFileName, 'w'),
