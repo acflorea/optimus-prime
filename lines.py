@@ -21,8 +21,8 @@ for prob in Pstar:
     index = index + 1
 
 for p in P:
-    plt.plot(x/300, p, label = p)
+    plt.plot(x/300, p)
 
-plt.plot(x/300, x/300, label = p)
+plt.plot(x/300, x/300)
 plt.grid(True)
 plt.show()
